@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/">
+        <file>graphs/close_button_150w.png</file>
+        <file>graphs/close_button_150w_mouseON.png</file>
+        <file>graphs/settings_button_150w.png</file>
+        <file>graphs/settings_button_150w_mouseON.png</file>
+        <file>graphs/start_button_150w.png</file>
+        <file>graphs/start_button_150w_mouseON.png</file>
+        <file>graphs/join_button_150w.png</file>
+        <file>graphs/join_button_150w_mouseON.png</file>
+        <file>graphs/new_button_150w.png</file>
+        <file>graphs/new_button_150w_mouseON.png</file>
+        <file>graphs/speed_up.png</file>
+        <file>graphs/coins_gray.png</file>
+        <file>graphs/itemIcon.png</file>
+    </qresource>
+</RCC>

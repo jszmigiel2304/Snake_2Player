@@ -9,16 +9,38 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    c_myinterfaceeventfilter.cpp \
+    c_myqapplication.cpp \
     main.cpp \
-    w_mainwindow.cpp
+    w_coinswidget.cpp \
+    w_mainwindow.cpp \
+    w_shopitemwidget.cpp \
+    w_shopwidget.cpp \
+    w_speedupcounterwidget.cpp
 
 HEADERS += \
-    w_mainwindow.h
+    _defaultProperties.h \
+    _myData.h \
+    c_myinterfaceeventfilter.h \
+    c_myqapplication.h \
+    w_coinswidget.h \
+    w_mainwindow.h \
+    w_shopitemwidget.h \
+    w_shopwidget.h \
+    w_speedupcounterwidget.h
 
-FORMS += \
-    w_mainwindow.ui
+FORMS +=
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    config.ini \
+    stylesheet.css \
+    stylesheet_bright.css \
+    stylesheet_dark.css
+
+RESOURCES += \
+    images.qrc
