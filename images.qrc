@@ -13,5 +13,14 @@
         <file>graphs/speed_up.png</file>
         <file>graphs/coins_gray.png</file>
         <file>graphs/itemIcon.png</file>
+        <file>graphs/board_empty50x50.png</file>
+        <file>graphs/wall_50x50.png</file>
+        <file>graphs/board_empty25x25.png</file>
+        <file>graphs/snake_body_50x50.png</file>
+        <file>graphs/snake_head_50x50.png</file>
+        <file>graphs/snake_tail_50x50.png</file>
+        <file>graphs/block_50x50.png</file>
+        <file>graphs/snake_body_bend_50x50.png</file>
+        <file>graphs/snake_body_bend_2_50x50.png</file>
     </qresource>
 </RCC>

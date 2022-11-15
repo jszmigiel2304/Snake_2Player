@@ -5,6 +5,9 @@
 #include "w_speedupcounterwidget.h"
 #include "w_coinswidget.h"
 #include "w_shopwidget.h"
+#include "w_boardwidget.h"
+#include "_myData.h"
+#include "c_snake.h"
 
 #include <QMainWindow>
 #include <QTimer>
@@ -21,6 +24,7 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include <QLabel>
+#include <QPixmap>
 
 
 class w_MainWindow : public QMainWindow
@@ -41,6 +45,12 @@ public:
     bool getGfullscreen_mode() const;
     void setGfullscreen_mode(bool newGfullscreen_mode);
 
+    void loadPlayer1Board(const board::boardArray &board);
+    void loadPlayer2Board(const board::boardArray &board);
+
+    void loadPlayer1Snake(c_snake *snake);
+    void loadPlayer2Snake(c_snake *snake);
+
 protected:
     void closeEvent(QCloseEvent *event) override;
 
@@ -57,8 +67,11 @@ private:
     w_coinsWidget *coinsWidgetPlayer2;
     w_shopWidget *shopPlayer1;
     w_shopWidget *shopPlayer2;
-    QWidget *boardPlayer1;
-    QWidget *boardPlayer2;
+    w_boardWidget *boardPlayer1;
+    w_boardWidget *boardPlayer2;
+
+    w_board::w_snake snakePlayer1;
+    w_board::w_snake snakePlayer2;
 
 //    QWidget *startButton;
 //    QWidget *settingButton;
@@ -77,6 +90,11 @@ private:
     bool gfullscreen_mode;
     int gwidth;
     int gheight;
+
+    void createInterface();
+    void createTopPanel();
+    void createPlayer1GmaeBox();
+    void createPlayer2GmaeBox();
 
 private slots:
     void joinButtonPressed();

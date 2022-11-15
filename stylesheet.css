@@ -136,15 +136,56 @@
 }
 
 #boardPlayer1Widget {
-    background-color: transparent;
-    border-style: solid;
-    border-width: 5px;
-    border-color: red;
+
 }
 
 #boardPlayer2Widget {
-    background-color: transparent;
+
+}
+
+#boardFieldLabel {
+    background-image: url(:/graphs/board_empty25x25.png);
+}
+
+#boardWallTopBottomLabel {
+    border-color: black;
     border-style: solid;
-    border-width: 5px;
-    border-color: red;
+
+    border-top-width: 2px;
+    border-bottom-width: 2px;
+}
+#boardWallLeftRightLabel {
+    border-color: black;
+    border-style: solid;
+
+    border-left-width: 2px;
+    border-right-width: 2px;
+}
+#boardLeftTopCornerLabel {
+    border-color: black;
+    border-style: solid;
+
+    border-top-width: 2px;
+    border-left-width: 2px;
+}
+#boardRightTopCornerLabel {
+    border-color: black;
+    border-style: solid;
+
+    border-top-width: 2px;
+    border-right-width: 2px;
+}
+#boardLeftBottomCornerLabel {
+    border-color: black;
+    border-style: solid;
+
+    border-left-width: 2px;
+    border-bottom-width: 2px;
+}
+#boardRightBottomCornerLabel {
+    border-color: black;
+    border-style: solid;
+
+    border-right-width: 2px;
+    border-bottom-width: 2px;
 }
