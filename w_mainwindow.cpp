@@ -6,6 +6,7 @@ w_MainWindow::w_MainWindow(QList<QPair<QString, QVariant>> settings, QWidget *pa
     myEventFilter = new c_myInterfaceEventFilter(this);
     connect(this, SIGNAL(destroyed()), myEventFilter, SLOT(deleteLater()));
     setWindowTitle( qApp->applicationDisplayName() );
+    refreshBoardStatus=true;
 
     for(int i=0; i<settings.size(); i++) {
         if( settings[i].first == "fullscreen_mode" ) setGfullscreen_mode( settings[i].second.toBool() );
@@ -32,6 +33,51 @@ w_MainWindow::~w_MainWindow()
 void w_MainWindow::closeEvent(QCloseEvent *event)
 {
     event->accept();
+}
+
+w_boardWidget *w_MainWindow::getBoardPlayer1() const
+{
+    return boardPlayer1;
+}
+
+void w_MainWindow::setBoardPlayer1(w_boardWidget *newBoardPlayer1)
+{
+    boardPlayer1 = newBoardPlayer1;
+}
+
+w_boardWidget *w_MainWindow::getBoardPlayer2() const
+{
+    return boardPlayer2;
+}
+
+void w_MainWindow::setBoardPlayer2(w_boardWidget *newBoardPlayer2)
+{
+    boardPlayer2 = newBoardPlayer2;
+}
+
+const w_board::w_snake &w_MainWindow::getSnakePlayer1() const
+{
+    return snakePlayer1;
+}
+
+void w_MainWindow::setSnakePlayer1(const w_board::w_snake &newSnakePlayer1)
+{
+    snakePlayer1 = newSnakePlayer1;
+}
+
+const w_board::w_snake &w_MainWindow::getSnakePlayer2() const
+{
+    return snakePlayer2;
+}
+
+void w_MainWindow::setSnakePlayer2(const w_board::w_snake &newSnakePlayer2)
+{
+    snakePlayer2 = newSnakePlayer2;
+}
+
+void w_MainWindow::stopRefreshing()
+{
+    refreshBoardStatus = false;
 }
 
 void w_MainWindow::createInterface()
@@ -123,13 +169,19 @@ void w_MainWindow::createTopPanel()
     connect(this, SIGNAL(destroyed()), closeButton, SLOT(deleteLater()));
     connect(this, SIGNAL(destroyed()), newButton, SLOT(deleteLater()));
     connect(this, SIGNAL(destroyed()), joinButton, SLOT(deleteLater()));
+
+    startButton->setFocusPolicy(Qt::NoFocus);
+    settingButton->setFocusPolicy(Qt::NoFocus);
+    closeButton->setFocusPolicy(Qt::NoFocus);
+    joinButton->setFocusPolicy(Qt::NoFocus);
+    newButton->setFocusPolicy(Qt::NoFocus);
 }
 
 void w_MainWindow::createPlayer1GmaeBox()
 {
     player1GameBox = new QWidget();
     player1NotifyLabel =  new QLabel();
-    sppedUpCounterPlayer1 = new w_speedUpCounterWidget();
+    speedUpCounterPlayer1 = new w_speedUpCounterWidget();
     coinsWidgetPlayer1 = new w_coinsWidget();
     shopPlayer1 = new w_shopWidget();
     boardPlayer1 = new w_boardWidget();
@@ -149,13 +201,13 @@ void w_MainWindow::createPlayer1GmaeBox()
     player1NotifyLabel->setGeometry(0,0, player1GameBox->width(), 90);
     player1NotifyLabel->setAlignment(Qt::AlignCenter);
 
-    sppedUpCounterPlayer1->setGeometry(player1GameBox->width() - 100,
+    speedUpCounterPlayer1->setGeometry(player1GameBox->width() - 160,
                                 player1GameBox->height() - 40,
-                                100,
+                                160,
                                 40);
     coinsWidgetPlayer1->setGeometry(0,
                                 player1GameBox->height() - 40,
-                                100,
+                                160,
                                 40);
     shopPlayer1->setGeometry(player1GameBox->width() / 2 - 150,
                              player1GameBox->height() - 40,
@@ -167,7 +219,7 @@ void w_MainWindow::createPlayer1GmaeBox()
                               player1GameBox->height() - 150);
 
     player1NotifyLabel->setParent(player1GameBox);
-    sppedUpCounterPlayer1->setParent(player1GameBox);
+    speedUpCounterPlayer1->setParent(player1GameBox);
     coinsWidgetPlayer1->setParent(player1GameBox);
     shopPlayer1->setParent(player1GameBox);
     boardPlayer1->setParent(player1GameBox);
@@ -175,7 +227,7 @@ void w_MainWindow::createPlayer1GmaeBox()
 
     connect(this, SIGNAL(destroyed()), player1GameBox, SLOT(deleteLater()));
     connect(this, SIGNAL(destroyed()), player1NotifyLabel, SLOT(deleteLater()));
-    connect(this, SIGNAL(destroyed()), sppedUpCounterPlayer1, SLOT(deleteLater()));
+    connect(this, SIGNAL(destroyed()), speedUpCounterPlayer1, SLOT(deleteLater()));
     connect(this, SIGNAL(destroyed()), coinsWidgetPlayer1, SLOT(deleteLater()));
     connect(this, SIGNAL(destroyed()), shopPlayer1, SLOT(deleteLater()));
     connect(this, SIGNAL(destroyed()), boardPlayer1, SLOT(deleteLater()));
@@ -185,7 +237,7 @@ void w_MainWindow::createPlayer2GmaeBox()
 {
     player2GameBox = new QWidget();
     player2NotifyLabel =  new QLabel();
-    sppedUpCounterPlayer2 = new w_speedUpCounterWidget();
+    speedUpCounterPlayer2 = new w_speedUpCounterWidget();
     coinsWidgetPlayer2 = new w_coinsWidget();
     shopPlayer2 = new w_shopWidget();
     boardPlayer2 = new w_boardWidget();
@@ -205,9 +257,9 @@ void w_MainWindow::createPlayer2GmaeBox()
     player2NotifyLabel->setGeometry(0,0, player2GameBox->width(), 90);
     player2NotifyLabel->setAlignment(Qt::AlignCenter);
 
-    sppedUpCounterPlayer2->setGeometry(0,
+    speedUpCounterPlayer2->setGeometry(0,
                                        player2GameBox->height() - 40,
-                                       100,
+                                       160,
                                        40);
     coinsWidgetPlayer2->setGeometry(player2GameBox->width() - 100,
                                   player2GameBox->height() - 40,
@@ -223,14 +275,14 @@ void w_MainWindow::createPlayer2GmaeBox()
                               player2GameBox->height() - 150);
 
     player2NotifyLabel->setParent(player2GameBox);
-    sppedUpCounterPlayer2->setParent(player2GameBox);
+    speedUpCounterPlayer2->setParent(player2GameBox);
     coinsWidgetPlayer2->setParent(player2GameBox);
     shopPlayer2->setParent(player2GameBox);
     boardPlayer2->setParent(player2GameBox);
 
     connect(this, SIGNAL(destroyed()), player2GameBox, SLOT(deleteLater()));
     connect(this, SIGNAL(destroyed()), player2NotifyLabel, SLOT(deleteLater()));
-    connect(this, SIGNAL(destroyed()), sppedUpCounterPlayer2, SLOT(deleteLater()));
+    connect(this, SIGNAL(destroyed()), speedUpCounterPlayer2, SLOT(deleteLater()));
     connect(this, SIGNAL(destroyed()), coinsWidgetPlayer2, SLOT(deleteLater()));
     connect(this, SIGNAL(destroyed()), shopPlayer2, SLOT(deleteLater()));
     connect(this, SIGNAL(destroyed()), boardPlayer2, SLOT(deleteLater()));
@@ -445,6 +497,76 @@ void w_MainWindow::loadPlayer2Snake(c_snake *snake)
     }
 
     boardPlayer2->loadSnake(tempSn);
+}
+
+void w_MainWindow::refreshPlayer1Board(const board::boardArray &board, const c_snake &snake)
+{
+    if(!refreshBoardStatus) return;
+    boardPlayer1->refreshBoard(board);
+    refreshPlayer1Snake(snake);
+}
+
+void w_MainWindow::refreshPlayer1Snake(const c_snake &snake)
+{
+    if(!refreshBoardStatus) return;
+    loadPlayer1Snake(const_cast<c_snake *>(&snake));
+}
+
+void w_MainWindow::refreshPlayer1Coins(qint32 coins)
+{
+    if(!refreshBoardStatus) return;
+    coinsWidgetPlayer1->setCoinsNumberText(coins);
+}
+
+void w_MainWindow::refreshPlayer2Board(const board::boardArray &board, const c_snake &snake)
+{
+    if(!refreshBoardStatus) return;
+    boardPlayer2->refreshBoard(board);
+    refreshPlayer2Snake(snake);
+}
+
+void w_MainWindow::refreshPlayer2Snake(const c_snake &snake)
+{
+    if(!refreshBoardStatus) return;
+    loadPlayer2Snake(const_cast<c_snake *>(&snake));
+}
+
+void w_MainWindow::refreshPlayer2Coins(qint32 coins)
+{
+    if(!refreshBoardStatus) return;
+    coinsWidgetPlayer2->setCoinsNumberText(coins);
+}
+
+void w_MainWindow::refrshSpeedUpCounter(QPair<bool, bool> player, int time)
+{
+    if(player.first)
+        speedUpCounterPlayer1->setLabelText(time);
+    if(player.second)
+        speedUpCounterPlayer2->setLabelText(time);
+}
+
+void w_MainWindow::resetSpeedUpCounter(QPair<bool, bool> player)
+{
+    if(player.first)
+        speedUpCounterPlayer1->setLabelText(0);
+    if(player.second)
+        speedUpCounterPlayer2->setLabelText(0);
+}
+
+void w_MainWindow::refreshSpeedUpCounterLevelLabel(QPair<bool, bool> player, quint8 speedUpLevel)
+{
+    if(player.first)
+        speedUpCounterPlayer1->setLevelLabelText(speedUpLevel);
+    if(player.second)
+        speedUpCounterPlayer2->setLevelLabelText(speedUpLevel);
+}
+
+void w_MainWindow::showNotification(QPair<bool, bool> player, QString msg)
+{
+    if(player.first)
+        player1NotifyLabel->setText(msg);
+    if(player.second)
+        player2NotifyLabel->setText(msg);
 }
 
 int w_MainWindow::getGheight() const

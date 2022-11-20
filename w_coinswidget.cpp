@@ -17,3 +17,8 @@ w_coinsWidget::w_coinsWidget(QWidget *parent)
     coinsNumberLabel.setAlignment(Qt::AlignCenter);
     coinsNumberLabel.setText("0000");
 }
+
+void w_coinsWidget::setCoinsNumberText(qint32 coins)
+{
+    coinsNumberLabel.setText(QString("%1").arg(coins));
+}

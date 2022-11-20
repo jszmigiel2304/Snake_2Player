@@ -24,8 +24,6 @@ bool c_myInterfaceEventFilter::eventFilter(QObject *obj, QEvent *event)
         if(obj->objectName() == "closeButtonWidget") { dynamic_cast<QWidget *>(obj)->setCursor(Qt::ArrowCursor); return true;}
         if(obj->objectName() == "joinButtonWidget") { dynamic_cast<QWidget *>(obj)->setCursor(Qt::ArrowCursor); return true;}
         if(obj->objectName() == "newButtonWidget") { dynamic_cast<QWidget *>(obj)->setCursor(Qt::ArrowCursor); return true;}
-
-        return true;
     }
     case QEvent::MouseButtonRelease: {
         event->accept();

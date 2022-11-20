@@ -2,15 +2,12 @@
 
 w_boardWidget::w_boardWidget(QWidget *parent)
     : QWidget{parent}
-{    
-    loadIcons();
+{
+    setIcons( dynamic_cast<c_MyQApplication *>(qApp)->getIcons() );
 }
 
 w_boardWidget::~w_boardWidget()
 {
-    qDeleteAll(icons.begin(), icons.end());
-    icons.clear();
-
     for(int iii = 0; iii < board::boardSize; iii++) {
         for(int jjj = 0; jjj < board::boardSize; jjj++) {
             delete boardLabelsArray[iii][jjj];
@@ -21,97 +18,31 @@ w_boardWidget::~w_boardWidget()
 
 void w_boardWidget::refreshBoard(const board::boardArray &board)
 {
+    for(int iii = 1; iii < board::boardSize - 1; iii++) {
+        for(int jjj = 1; jjj < board::boardSize - 1; jjj++) {
+            if( board[iii][jjj] >= 3 && board[iii][jjj] < 50 ) {
+                continue;
+            }
 
+            if(!(*(*icons)[board[iii][jjj]]).isNull())
+                boardLabelsArray[iii][jjj]->setPixmap( (*(*icons)[board[iii][jjj]]).scaled(fieldWidth, fieldWidth) );
+        }
+    }
 }
 
-void w_boardWidget::loadIcons()
+void w_boardWidget::refreshSnake(const w_board::w_snake &snake)
 {
-    QPixmap * pixmap = new QPixmap(":/graphs/board_empty50x50.png", "png");
-    if( !pixmap->isNull() )
-        icons[board::EMPTY] = new QPixmap();
-    else
-        icons[board::EMPTY] = new QPixmap();
-    delete pixmap;
+    loadSnake(snake);
+}
 
-    pixmap = new QPixmap(":/graphs/wall_50x50.png", "png");
-    if( !pixmap->isNull() )
-        icons[board::WALL] = new QPixmap(*pixmap);
-    else
-        icons[board::WALL] = new QPixmap();
-    delete pixmap;
+w_board::iconMap w_boardWidget::getIcons() const
+{
+    return icons;
+}
 
-    pixmap = new QPixmap(":/graphs/wall_50x50.png", "png");
-    if( !pixmap->isNull() )
-        icons[board::WALL] = new QPixmap(*pixmap);
-    else
-        icons[board::WALL] = new QPixmap();
-    delete pixmap;
-
-    pixmap = new QPixmap(":/graphs/block_50x50.png", "png");
-    if( !pixmap->isNull() )
-        icons[board::BLOCK] = new QPixmap(*pixmap);
-    else
-        icons[board::BLOCK] = new QPixmap();
-    delete pixmap;
-
-    pixmap = new QPixmap(":/graphs/snake_head_50x50.png", "png");
-    if( !pixmap->isNull() ) {
-        icons[board::SNAKE_HEAD_DOWN] = new QPixmap(*pixmap);
-        icons[board::SNAKE_HEAD_UP] = new QPixmap((*pixmap).transformed(QTransform().rotate(180)));
-        icons[board::SNAKE_HEAD_LEFT] = new QPixmap((*pixmap).transformed(QTransform().rotate(90)));
-        icons[board::SNAKE_HEAD_RIGHT] = new QPixmap((*pixmap).transformed(QTransform().rotate(-90)));
-    }
-    else {
-        icons[board::SNAKE_HEAD_DOWN] = new QPixmap();
-        icons[board::SNAKE_HEAD_UP] = new QPixmap();
-        icons[board::SNAKE_HEAD_LEFT] = new QPixmap();
-        icons[board::SNAKE_HEAD_RIGHT] = new QPixmap();
-    }
-    delete pixmap;
-
-    pixmap = new QPixmap(":/graphs/snake_body_50x50.png", "png");
-    if( !pixmap->isNull() ) {
-        icons[board::SNAKE_BODY_HORIZONTAL] = new QPixmap(*pixmap);
-        icons[board::SNAKE_BODY_VERTICAL] = new QPixmap((*pixmap).transformed(QTransform().rotate(90)));
-    } else {
-        icons[board::SNAKE_BODY_HORIZONTAL] = new QPixmap();
-        icons[board::SNAKE_BODY_VERTICAL] = new QPixmap();
-    }
-    delete pixmap;
-
-    pixmap = new QPixmap(":/graphs/snake_body_bend_50x50.png", "png");
-    if( !pixmap->isNull() ) {
-        icons[board::SNAKE_BODY_BEND_LT] = new QPixmap(*pixmap);
-        icons[board::SNAKE_BODY_BEND_RB] = new QPixmap((*pixmap).transformed(QTransform().rotate(180)));
-    } else {
-        icons[board::SNAKE_BODY_BEND_LT] = new QPixmap();
-        icons[board::SNAKE_BODY_BEND_RB] = new QPixmap();
-    }
-    delete pixmap;
-
-    pixmap = new QPixmap(":/graphs/snake_body_bend_2_50x50.png", "png");
-    if( !pixmap->isNull() ) {
-        icons[board::SNAKE_BODY_BEND_LB] = new QPixmap(*pixmap);
-        icons[board::SNAKE_BODY_BEND_RT] = new QPixmap((*pixmap).transformed(QTransform().rotate(180)));
-    } else {
-        icons[board::SNAKE_BODY_BEND_LB] = new QPixmap();
-        icons[board::SNAKE_BODY_BEND_RT] = new QPixmap();
-    }
-    delete pixmap;
-
-    pixmap = new QPixmap(":/graphs/snake_tail_50x50.png", "png");
-    if( !pixmap->isNull() ) {
-        icons[board::SNAKE_TAIL_RIGHT] = new QPixmap(*pixmap);
-        icons[board::SNAKE_TAIL_LEFT] = new QPixmap((*pixmap).transformed(QTransform().rotate(180)));
-        icons[board::SNAKE_TAIL_DOWN] = new QPixmap((*pixmap).transformed(QTransform().rotate(90)));
-        icons[board::SNAKE_TAIL_UP] = new QPixmap((*pixmap).transformed(QTransform().rotate(-90)));
-    } else {
-        icons[board::SNAKE_TAIL_UP] = new QPixmap();
-        icons[board::SNAKE_TAIL_DOWN] = new QPixmap();
-        icons[board::SNAKE_TAIL_LEFT] = new QPixmap();
-        icons[board::SNAKE_TAIL_RIGHT] = new QPixmap();
-    }
-    delete pixmap;
+void w_boardWidget::setIcons(w_board::iconMap newIcons)
+{
+    icons = newIcons;
 }
 
 void w_boardWidget::loadBoard(const board::boardArray &board)
@@ -133,7 +64,6 @@ void w_boardWidget::loadBoard(const board::boardArray &board)
                                          fieldHeight);
 
 
-
             if(jjj == 0 ||  jjj == board::boardSize-1)
                 boardFieldLabel->setObjectName("boardWallTopBottomLabel");
             else if(iii == 0 || iii == board::boardSize-1)
@@ -141,8 +71,8 @@ void w_boardWidget::loadBoard(const board::boardArray &board)
             else
                 boardFieldLabel->setObjectName("boardFieldLabel");
 
-            if(!(*icons[board[iii][jjj]]).isNull())
-                boardFieldLabel->setPixmap( (*icons[board[iii][jjj]]).scaled(fieldWidth, fieldWidth) );
+            if(!(*(*icons)[board[iii][jjj]]).isNull())
+                boardFieldLabel->setPixmap( (*(*icons)[board[iii][jjj]]).scaled(fieldWidth, fieldWidth) );
 
             boardFieldLabel->setAlignment(Qt::AlignCenter);
             boardLabelsArray[iii][jjj] = boardFieldLabel;
@@ -164,18 +94,5 @@ void w_boardWidget::loadSnake(const w_board::w_snake snake)
 
 QPixmap *w_boardWidget::getIcon(const board::BoardField field)
 {
-    return icons[field];
+    return (*icons)[field];
 }
-
-
-//    EMPTY,
-//    WALL,
-//    BLOCK,
-//    SNAKE_HEAD,
-//    SNAKE_BODY,
-//    SNAKE_TAIL,
-//    FOOD_LVL_1,
-//    FOOD_LVL_2,
-//    COIN_LVL_1,
-//    COIN_LVL_2,
-//    COIN_LVL_3,

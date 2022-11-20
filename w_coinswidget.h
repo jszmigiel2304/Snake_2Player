@@ -11,6 +11,9 @@ class w_coinsWidget : public QWidget
 public:
     explicit w_coinsWidget(QWidget *parent = nullptr);
 
+public slots:
+    void setCoinsNumberText(qint32 coins);
+
 private:
     QWidget iconHolder;
     QLabel coinsNumberLabel;

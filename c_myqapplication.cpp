@@ -27,6 +27,16 @@ c_MyQApplication::c_MyQApplication(int &argc, char **argv) : QApplication(argc, 
         error("Nie znaleziono pliku stylesheet.qss");
         exit(0);
     }
+
+    loadIcons();
+}
+
+c_MyQApplication::~c_MyQApplication()
+{
+    qDeleteAll(icons->begin(), icons->end());
+    icons->clear();
+    delete icons;
+
 }
 
 QList<QPair<QString, QVariant> > c_MyQApplication::getWindowProperties()
@@ -161,6 +171,165 @@ QList<QPair<QString, QVariant> > c_MyQApplication::getPlayer2Properties(const QS
     sett.endGroup();
 
     return list;
+}
+
+w_board::iconMap c_MyQApplication::getIcons() const
+{
+    return icons;
+}
+
+bool c_MyQApplication::notify(QObject *receiver, QEvent *e)
+{
+    if (e->type() == QEvent::KeyPress) {
+        QKeyEvent* key = static_cast<QKeyEvent*>(e);
+        int kp = key->key();
+
+        if(kp == Qt::Key_W || kp == Qt::Key_S || kp == Qt::Key_A || kp == Qt::Key_D || kp == Qt::Key_Up || kp == Qt::Key_Down || kp == Qt::Key_Left || kp == Qt::Key_Right )
+            if(!pressedKeys.contains( static_cast<int>(key->key()) ))
+                pressedKeys.append(kp);
+        emit changeMoveDirectionKeysPressed(pressedKeys);
+        return true;
+
+    } else if(e->type() == QEvent::KeyRelease) {
+        QKeyEvent* key = static_cast<QKeyEvent*>(e);
+        int kp = key->key();
+        pressedKeys.removeAll(kp);
+        return true;
+    }
+
+    return QApplication::notify(receiver, e);
+}
+
+void c_MyQApplication::loadIcons()
+{
+    icons = new QMap<board::BoardField, QPixmap *>();
+
+    QPixmap * pixmap = new QPixmap(":/graphs/board_empty25x25.png", "png");
+    if( !pixmap->isNull() )
+        (*icons)[board::EMPTY] = new QPixmap(*pixmap);
+    else
+        (*icons)[board::EMPTY] = new QPixmap();
+    delete pixmap;
+
+    pixmap = new QPixmap(":/graphs/wall_50x50.png", "png");
+    if( !pixmap->isNull() )
+        (*icons)[board::WALL] = new QPixmap(*pixmap);
+    else
+        (*icons)[board::WALL] = new QPixmap();
+    delete pixmap;
+
+    pixmap = new QPixmap(":/graphs/wall_50x50.png", "png");
+    if( !pixmap->isNull() )
+        (*icons)[board::WALL] = new QPixmap(*pixmap);
+    else
+        (*icons)[board::WALL] = new QPixmap();
+    delete pixmap;
+
+    pixmap = new QPixmap(":/graphs/block_50x50.png", "png");
+    if( !pixmap->isNull() )
+        (*icons)[board::BLOCK] = new QPixmap(*pixmap);
+    else
+        (*icons)[board::BLOCK] = new QPixmap();
+    delete pixmap;
+
+    pixmap = new QPixmap(":/graphs/snake_head_50x50.png", "png");
+    if( !pixmap->isNull() ) {
+        (*icons)[board::SNAKE_HEAD_DOWN] = new QPixmap(*pixmap);
+        (*icons)[board::SNAKE_HEAD_UP] = new QPixmap((*pixmap).transformed(QTransform().rotate(180)));
+        (*icons)[board::SNAKE_HEAD_LEFT] = new QPixmap((*pixmap).transformed(QTransform().rotate(90)));
+        (*icons)[board::SNAKE_HEAD_RIGHT] = new QPixmap((*pixmap).transformed(QTransform().rotate(-90)));
+    }
+    else {
+        (*icons)[board::SNAKE_HEAD_DOWN] = new QPixmap();
+        (*icons)[board::SNAKE_HEAD_UP] = new QPixmap();
+        (*icons)[board::SNAKE_HEAD_LEFT] = new QPixmap();
+        (*icons)[board::SNAKE_HEAD_RIGHT] = new QPixmap();
+    }
+    delete pixmap;
+
+    pixmap = new QPixmap(":/graphs/snake_body_50x50.png", "png");
+    if( !pixmap->isNull() ) {
+        (*icons)[board::SNAKE_BODY_HORIZONTAL] = new QPixmap(*pixmap);
+        (*icons)[board::SNAKE_BODY_VERTICAL] = new QPixmap((*pixmap).transformed(QTransform().rotate(90)));
+    } else {
+        (*icons)[board::SNAKE_BODY_HORIZONTAL] = new QPixmap();
+        (*icons)[board::SNAKE_BODY_VERTICAL] = new QPixmap();
+    }
+    delete pixmap;
+
+    pixmap = new QPixmap(":/graphs/snake_body_bend_50x50.png", "png");
+    if( !pixmap->isNull() ) {
+        (*icons)[board::SNAKE_BODY_BEND_LT] = new QPixmap(*pixmap);
+        (*icons)[board::SNAKE_BODY_BEND_RB] = new QPixmap((*pixmap).transformed(QTransform().rotate(180)));
+    } else {
+        (*icons)[board::SNAKE_BODY_BEND_LT] = new QPixmap();
+        (*icons)[board::SNAKE_BODY_BEND_RB] = new QPixmap();
+    }
+    delete pixmap;
+
+    pixmap = new QPixmap(":/graphs/snake_body_bend_2_50x50.png", "png");
+    if( !pixmap->isNull() ) {
+        (*icons)[board::SNAKE_BODY_BEND_LB] = new QPixmap(*pixmap);
+        (*icons)[board::SNAKE_BODY_BEND_RT] = new QPixmap((*pixmap).transformed(QTransform().rotate(180)));
+    } else {
+        (*icons)[board::SNAKE_BODY_BEND_LB] = new QPixmap();
+        (*icons)[board::SNAKE_BODY_BEND_RT] = new QPixmap();
+    }
+    delete pixmap;
+
+    pixmap = new QPixmap(":/graphs/snake_tail_50x50.png", "png");
+    if( !pixmap->isNull() ) {
+        (*icons)[board::SNAKE_TAIL_RIGHT] = new QPixmap(*pixmap);
+        (*icons)[board::SNAKE_TAIL_LEFT] = new QPixmap((*pixmap).transformed(QTransform().rotate(180)));
+        (*icons)[board::SNAKE_TAIL_DOWN] = new QPixmap((*pixmap).transformed(QTransform().rotate(90)));
+        (*icons)[board::SNAKE_TAIL_UP] = new QPixmap((*pixmap).transformed(QTransform().rotate(-90)));
+    } else {
+        (*icons)[board::SNAKE_TAIL_UP] = new QPixmap();
+        (*icons)[board::SNAKE_TAIL_DOWN] = new QPixmap();
+        (*icons)[board::SNAKE_TAIL_LEFT] = new QPixmap();
+        (*icons)[board::SNAKE_TAIL_RIGHT] = new QPixmap();
+    }
+    delete pixmap;
+
+    pixmap = new QPixmap(":/graphs/food_50x50.png", "png");
+    if( !pixmap->isNull() ) {
+        (*icons)[board::FOOD_LVL_1] = new QPixmap(*pixmap);
+    } else {
+        (*icons)[board::FOOD_LVL_1] = new QPixmap();
+    }
+    delete pixmap;
+
+    pixmap = new QPixmap(":/graphs/food_x2_50x50.png", "png");
+    if( !pixmap->isNull() ) {
+        (*icons)[board::FOOD_LVL_2] = new QPixmap(*pixmap);
+    } else {
+        (*icons)[board::FOOD_LVL_2] = new QPixmap();
+    }
+    delete pixmap;
+
+    pixmap = new QPixmap(":/graphs/coin_x1_50x50.png", "png");
+    if( !pixmap->isNull() ) {
+        (*icons)[board::COIN_LVL_1] = new QPixmap(*pixmap);
+    } else {
+        (*icons)[board::COIN_LVL_1] = new QPixmap();
+    }
+    delete pixmap;
+
+    pixmap = new QPixmap(":/graphs/coin_x2_50x50.png", "png");
+    if( !pixmap->isNull() ) {
+        (*icons)[board::COIN_LVL_2] = new QPixmap(*pixmap);
+    } else {
+        (*icons)[board::COIN_LVL_2] = new QPixmap();
+    }
+    delete pixmap;
+
+    pixmap = new QPixmap(":/graphs/coin_x3_50x50.png", "png");
+    if( !pixmap->isNull() ) {
+        (*icons)[board::COIN_LVL_3] = new QPixmap(*pixmap);
+    } else {
+        (*icons)[board::COIN_LVL_3] = new QPixmap();
+    }
+    delete pixmap;
 }
 
 void c_MyQApplication::error(const QString& message)

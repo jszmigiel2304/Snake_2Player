@@ -10,10 +10,14 @@ CONFIG += c++17
 
 SOURCES += \
     c_board.cpp \
+    c_eventcontroller.cpp \
     c_game.cpp \
     c_myinterfaceeventfilter.cpp \
     c_myqapplication.cpp \
+    c_mytimer.cpp \
+    c_player.cpp \
     c_snake.cpp \
+    c_wallet.cpp \
     main.cpp \
     w_boardwidget.cpp \
     w_coinswidget.cpp \
@@ -26,10 +30,14 @@ HEADERS += \
     _defaultProperties.h \
     _myData.h \
     c_board.h \
+    c_eventcontroller.h \
     c_game.h \
     c_myinterfaceeventfilter.h \
     c_myqapplication.h \
+    c_mytimer.h \
+    c_player.h \
     c_snake.h \
+    c_wallet.h \
     w_boardwidget.h \
     w_coinswidget.h \
     w_mainwindow.h \

@@ -22,5 +22,10 @@
         <file>graphs/block_50x50.png</file>
         <file>graphs/snake_body_bend_50x50.png</file>
         <file>graphs/snake_body_bend_2_50x50.png</file>
+        <file>graphs/coin_x1_50x50.png</file>
+        <file>graphs/coin_x2_50x50.png</file>
+        <file>graphs/coin_x3_50x50.png</file>
+        <file>graphs/food_50x50.png</file>
+        <file>graphs/food_x2_50x50.png</file>
     </qresource>
 </RCC>
