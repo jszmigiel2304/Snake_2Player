@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -9,15 +9,12 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    c_board.cpp \
-    c_eventcontroller.cpp \
+    c_connectiontoservercontroller.cpp \
     c_game.cpp \
     c_myinterfaceeventfilter.cpp \
     c_myqapplication.cpp \
-    c_mytimer.cpp \
+    c_parser.cpp \
     c_player.cpp \
-    c_snake.cpp \
-    c_wallet.cpp \
     main.cpp \
     w_boardwidget.cpp \
     w_coinswidget.cpp \
@@ -29,15 +26,12 @@ SOURCES += \
 HEADERS += \
     _defaultProperties.h \
     _myData.h \
-    c_board.h \
-    c_eventcontroller.h \
+    c_connectiontoservercontroller.h \
     c_game.h \
     c_myinterfaceeventfilter.h \
     c_myqapplication.h \
-    c_mytimer.h \
+    c_parser.h \
     c_player.h \
-    c_snake.h \
-    c_wallet.h \
     w_boardwidget.h \
     w_coinswidget.h \
     w_mainwindow.h \

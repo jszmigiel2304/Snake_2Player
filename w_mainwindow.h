@@ -7,7 +7,6 @@
 #include "w_shopwidget.h"
 #include "w_boardwidget.h"
 #include "_myData.h"
-#include "c_snake.h"
 
 #include <QMainWindow>
 #include <QTimer>

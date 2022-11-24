@@ -1,7 +1,8 @@
 #include "w_mainwindow.h"
 #include "c_myqapplication.h"
 #include "c_game.h"
-#include "c_board.h"
+#include "c_connectiontoservercontroller.h"
+#include "c_parser.h"
 
 #include <QApplication>
 #include <QObject>
@@ -12,6 +13,8 @@ int main(int argc, char *argv[])
     w_MainWindow w(a.getWindowProperties());
 
     c_game game;
+
+    c_connectionToServerController connection;
 
 
     QObject::connect(&a, SIGNAL(changeMoveDirectionKeysPressed(QList<int>)), &game, SLOT(changeMoveDirection(QList<int>)));
@@ -37,6 +40,16 @@ int main(int argc, char *argv[])
 
     w.loadPlayer1Snake(game.getPlayer1().getSnake());
     w.loadPlayer2Snake(game.getPlayer2().getSnake());
+
+    connection.connectToServer();
+
+    connection.write(c_parser().prepareNewGameRequest());
+    connection.write(c_parser().prepareNewGameRequest());
+    connection.write(c_parser().prepareNewGameRequest());
+    connection.write(c_parser().prepareNewGameRequest());
+    connection.write(c_parser().prepareNewGameRequest());
+
+    connection.write(c_parser().prepareGamesListRequest());
 
     w.show();
     return a.exec();

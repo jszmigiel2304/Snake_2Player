@@ -3,67 +3,79 @@
 c_player::c_player(QObject *parent)
     : QObject{parent}
 {    
-    board = new c_board(this);
-    snake = new c_snake(this);
-    wallet = new c_wallet(this);
+    name = "player";
+    //name = QString("p.%1").arg(QUuid::createUuid().toString(QUuid::WithoutBraces));
+//    board = new c_board(this);
+//    snake = new c_snake(this);
+//    wallet = new c_wallet(this);
 
-    nextMoveDirection = snake::MOVE_UP;
+//    nextMoveDirection = snake::MOVE_UP;
 
-    connect(board, SIGNAL(boardChanged()), this, SLOT(boardChanged()));
-    connect(snake, SIGNAL(snakeChanged()), this, SLOT(snakeChanged()));
+//    connect(board, SIGNAL(boardChanged()), this, SLOT(boardChanged()));
+//    connect(snake, SIGNAL(snakeChanged()), this, SLOT(snakeChanged()));
 }
 
 c_player::~c_player()
 {
-    wallet->deleteLater();
-    board->deleteLater();
-    snake->deleteLater();
+//    wallet->deleteLater();
+//    board->deleteLater();
+//    snake->deleteLater();
 }
 
-c_board *c_player::getBoard() const
+//c_board *c_player::getBoard() const
+//{
+//    return board;
+//}
+
+//void c_player::setBoard(c_board *newBoard)
+//{
+//    board = newBoard;
+//}
+
+//c_snake *c_player::getSnake() const
+//{
+//    return snake;
+//}
+
+//void c_player::setSnake(c_snake *newSnake)
+//{
+//    snake = newSnake;
+//}
+
+
+//void c_player::move()
+//{
+//    snake->move(getNextMoveDirection());
+//}
+
+//void c_player::speedUp(quint8 speedLevel)
+//{
+//    getSnake()->setSpeed(speedLevel);
+//}
+
+//void c_player::feedSnake(quint8 foodAmount)
+//{
+//    getSnake()->extend(foodAmount);
+//}
+
+//void c_player::coinsToWallet(quint32 coins)
+//{
+//    wallet->addCoins(coins);
+//}
+
+//void c_player::takeCoinsFromWallet(quint32 coins)
+//{
+//    wallet->takeCoins(coins);
+//}
+
+void c_player::setName(const QString &newName)
 {
-    return board;
+    name = newName;
 }
 
-void c_player::setBoard(c_board *newBoard)
+const QString &c_player::getName() const
 {
-    board = newBoard;
-}
-
-c_snake *c_player::getSnake() const
-{
-    return snake;
-}
-
-void c_player::setSnake(c_snake *newSnake)
-{
-    snake = newSnake;
-}
-
-
-void c_player::move()
-{
-    snake->move(getNextMoveDirection());
-}
-
-void c_player::speedUp(quint8 speedLevel)
-{
-    getSnake()->setSpeed(speedLevel);
-}
-
-void c_player::feedSnake(quint8 foodAmount)
-{
-    getSnake()->extend(foodAmount);
-}
-
-void c_player::coinsToWallet(quint32 coins)
-{
-    wallet->addCoins(coins);
-}
-
-void c_player::takeCoinsFromWallet(quint32 coins)
-{
-    wallet->takeCoins(coins);
+    return name;
 }
 
 c_wallet *c_player::getWallet() const

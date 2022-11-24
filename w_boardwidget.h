@@ -2,7 +2,6 @@
 #define W_BOARDWIDGET_H
 
 #include "c_myqapplication.h"
-#include "c_board.h"
 #include "_myData.h"
 
 #include <QGridLayout>
