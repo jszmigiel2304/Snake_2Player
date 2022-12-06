@@ -18,12 +18,12 @@ public:
 
     const QTcpSocket &getSocket() const;
 
-    void write(QByteArray data);
 
     QAbstractSocket::SocketState getConnectionStatus();
     QString toString();
 
 public slots:
+    void sendToServer(const QByteArray &data);
     void connectToServer();
 
 protected:
@@ -51,10 +51,10 @@ signals:
     void readingPacketErrorSignal();
 
     void setPlayersNameAnswer(const QString &name);
-    void newGameRequestAnswer(game::gameInformations gameInfo);
-    void refreshGameInfoAnswer(game::gameInformations gameInfo);
-    void gameRemovedAnswer(const QString &gameName);
-    void gamesListAnswer(QList<game::gameInformations> gamesInfo);
+    void newLobbyRequestAnswer(const lobby::lobbyInformations &lobbyInfo);
+    void refreshLobbyInfoAnswer(const lobby::lobbyInformations &lobbyInfo);
+    void lobbyRemovedAnswer(const QString &lobbyName);
+    void lobbiesListAnswer(const QList<lobby::lobbyInformations> &lobbiesInfo);
 };
 
 #endif // C_CONNECTIONTOSERVERCONTROLLER_H

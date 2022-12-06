@@ -65,6 +65,7 @@ namespace game {
     struct gameInformations {
         QString gameName;
         game::State state;
+        QString ownerName;
         QPair<QString, QString> playersNames;
         QPair<bool, bool> playersReadyCheck;
 
@@ -77,6 +78,7 @@ namespace game {
             map["player_two_name"] = playersNames.second;
             map["player_one_ready_check"] = playersReadyCheck.first;
             map["player_two_ready_check"] = playersReadyCheck.second;
+            map["owner_name"] = ownerName;
 
             return map;
         };
@@ -89,11 +91,56 @@ namespace game {
             gameInfos.playersNames.second = map["player_two_name"].toString();
             gameInfos.playersReadyCheck.first = map["player_one_ready_check"].toBool();
             gameInfos.playersReadyCheck.second = map["player_two_ready_check"].toBool();
+            gameInfos.ownerName = map["owner_name"].toString();
 
             return gameInfos;
         };
     };
 
+}
+
+namespace lobby {
+    enum State : quint8 {
+        LOBBY_CREATED_NOT_INITIALIZED,
+        LOBBY_INITIALIZED,
+        LOBBY_WAITING_FOR_PLAYERS_READY_CHECK,
+        LOBBY_READY_TO_START,
+    };
+
+    struct lobbyInformations {
+        QString lobbyName;
+        lobby::State state;
+        QString ownerName;
+        QPair<QString, QString> playersNames;
+        QPair<bool, bool> playersReadyCheck;
+
+        QMap<QString, QVariant> toMap() {
+            QMap<QString, QVariant> map;
+
+            map["lobby_name"] = lobbyName;
+            map["lobby_state"] = state;
+            map["player_one_name"] = playersNames.first;
+            map["player_two_name"] = playersNames.second;
+            map["player_one_ready_check"] = playersReadyCheck.first;
+            map["player_two_ready_check"] = playersReadyCheck.second;
+            map["owner_name"] = ownerName;
+
+            return map;
+        };
+        static lobbyInformations fromMap(QMap<QString, QVariant> map) {
+            lobbyInformations lobbyInfos;
+
+            lobbyInfos.lobbyName = map["lobby_name"].toString();
+            lobbyInfos.state = static_cast<lobby::State>(map["lobby_state"].toUInt());
+            lobbyInfos.playersNames.first = map["player_one_name"].toString();
+            lobbyInfos.playersNames.second = map["player_two_name"].toString();
+            lobbyInfos.playersReadyCheck.first = map["player_one_ready_check"].toBool();
+            lobbyInfos.playersReadyCheck.second = map["player_two_ready_check"].toBool();
+            lobbyInfos.ownerName = map["owner_name"].toString();
+
+            return lobbyInfos;
+        };
+    };
 }
 
 namespace board {
@@ -164,7 +211,14 @@ namespace parser {
         GAME_BOARD_STATE_CHANGED = 34,
         GAME_SNAKE_MOVE_DIRECTION_CHANGED = 35,
         GAME_PLAYER_COINS_NUMBER_CHANGED = 36,
-        GAME_PLAYER_SHOP_CHANGED = 37
+        GAME_PLAYER_SHOP_CHANGED = 37,
+        CREATE_NEW_LOBBY = 50,
+        LOBBY_CREATED = 51,
+        REMOVE_LOBBY = 52,
+        LOBBY_REMOVED = 53,
+        LOBBY_INFOS_CHANGED = 54,
+        GET_LOBBIES_LIST = 55,
+        LOBBIES_LIST = 56,
     };
 
     struct Packet {
@@ -186,6 +240,26 @@ namespace w_board {
     typedef QLabel * boardPixmapsArray[board::boardSize][board::boardSize];
     typedef QMap<board::BoardField, QPixmap *> * iconMap;
     typedef QList<w_snakePart> w_snake;
+}
+
+namespace Interface_NS {
+    enum WidgetType {
+        WT_TP_BUTTON,
+        WT_LOBBY_BOX,
+        WT_GAMES_LIST_BOX,
+        WT_GAMES_LIST_BOX_ITEM,
+        WT_LW_LABEL,
+        WT_LW_EDIT_BUTTON,
+        WT_LW_LINE_EDIT,
+        WT_LW_CHECK_BOX,
+        WT_GLW_LABEL,
+        WT_GLW_BUTTON,
+    };
+    enum InterfaceType {
+        IT_MAIN_MENU,
+        IT_NEW_GAME
+    };
+
 }
 
 #endif // _MYDATA_H

@@ -13,20 +13,8 @@ c_MyQApplication::c_MyQApplication(int &argc, char **argv) : QApplication(argc, 
         exit(0);
     } else {
         QSettings sett( applicationDirPath() + "/config.ini", QSettings::IniFormat);
-        sett.beginGroup("style_sheets");
-        stylesheetFileName = sett.value("used_file_name").toString();
-        sett.endGroup();
     }
 
-    QFile stylesheetFile( applicationDirPath() + QString("/%1").arg(stylesheetFileName) );
-    if(stylesheetFile.open(QFile::ReadOnly)) {
-        QString styleSheet = QLatin1String(stylesheetFile.readAll());
-        setStyleSheet(styleSheet);
-        stylesheetFile.close();
-    } else {
-        error("Nie znaleziono pliku stylesheet.qss");
-        exit(0);
-    }
 
     loadIcons();
 }
@@ -188,13 +176,11 @@ bool c_MyQApplication::notify(QObject *receiver, QEvent *e)
             if(!pressedKeys.contains( static_cast<int>(key->key()) ))
                 pressedKeys.append(kp);
         emit changeMoveDirectionKeysPressed(pressedKeys);
-        return true;
 
     } else if(e->type() == QEvent::KeyRelease) {
         QKeyEvent* key = static_cast<QKeyEvent*>(e);
         int kp = key->key();
         pressedKeys.removeAll(kp);
-        return true;
     }
 
     return QApplication::notify(receiver, e);

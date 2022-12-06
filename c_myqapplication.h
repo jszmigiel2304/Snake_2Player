@@ -42,7 +42,6 @@ public:
     bool notify(QObject *receiver, QEvent *e) override;
 
 private:
-    QString stylesheetFileName;
     QString configFileName;
 
     w_board::iconMap icons;

@@ -27,5 +27,12 @@
         <file>graphs/coin_x3_50x50.png</file>
         <file>graphs/food_50x50.png</file>
         <file>graphs/food_x2_50x50.png</file>
+        <file>graphs/check_icon_green_50x50.png</file>
+        <file>graphs/not_check_icon_red_50x50.png</file>
+        <file>graphs/line_edit_50x50.png</file>
+        <file>graphs/back_button_150w.png</file>
+        <file>graphs/back_button_150w_mouseON.png</file>
+        <file>graphs/button_bg_150w.png</file>
+        <file>graphs/button_bg_mouse_on_150w.png</file>
     </qresource>
 </RCC>

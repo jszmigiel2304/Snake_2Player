@@ -25,7 +25,7 @@ c_connectionToServerController::~c_connectionToServerController()
 }
 
 
-void c_connectionToServerController::write(QByteArray data)
+void c_connectionToServerController::sendToServer(const QByteArray &data)
 {
     socket.write(data);
     writeEndOfPacket();
@@ -80,29 +80,24 @@ void c_connectionToServerController::peerReadyRead()
 
 void c_connectionToServerController::processReceivedData(QByteArray data)
 {
-    c_parser parser;
-    parser::Packet packet = parser.ParseReceivedPacket(data);
+    parser::Packet packet;
+    c_parser().ParseReceivedPacket(data, packet);
 
     switch (packet.content) {
     case parser::EMPTY: { return;}
     case parser::ERROR_READING_JSON: { emit readingPacketErrorSignal(); return; }
     case parser::SET_PLAYER_NAME_ANSWER: { emit setPlayersNameAnswer(packet.data.at(0)["player_name"].toString()); return; }
-    case parser::GAME_CREATED: { emit newGameRequestAnswer( game::gameInformations::fromMap( packet.data.at(0) ) ); return; }
-    case parser::GAME_INFOS_CHANGED: { emit refreshGameInfoAnswer( game::gameInformations::fromMap( packet.data.at(0) ) ); return; }
-    case parser::GAME_REMOVED: { emit gameRemovedAnswer( packet.data.at(0)["game_name"].toString()); return; }
-    case parser::GAMES_LIST: {
-        QList<game::gameInformations> gamesInfos;
-        std::for_each( packet.data.begin(), packet.data.end(), [&gamesInfos](QMap<QString, QVariant> map) { gamesInfos.append( game::gameInformations::fromMap(map) );} );
-        emit gamesListAnswer( gamesInfos );
+    case parser::LOBBY_CREATED: { emit newLobbyRequestAnswer( lobby::lobbyInformations::fromMap( packet.data.at(0) ) ); return; }
+    case parser::LOBBY_INFOS_CHANGED: { emit refreshLobbyInfoAnswer( lobby::lobbyInformations::fromMap( packet.data.at(0) ) ); return; }
+    case parser::LOBBY_REMOVED: { emit lobbyRemovedAnswer( packet.data.at(0)["lobby_name"].toString()); return; }
+    case parser::LOBBIES_LIST: {
+        QList<lobby::lobbyInformations> lobbiesInfos;
+        std::for_each( packet.data.begin(), packet.data.end(), [&lobbiesInfos](QMap<QString, QVariant> map) { lobbiesInfos.append( lobby::lobbyInformations::fromMap(map) );} );
+        emit lobbiesListAnswer( lobbiesInfos );
         return; }
     default: {break;}
     }
 }
-void setPlayersNameAnswer(const QString &name);
-void newGameRequestAnswer(game::gameInformations gameInfo);
-void refreshGameInfoAnswer(game::gameInformations gameInfo);
-void gameRemovedAnswer(const QString &gameName);
-void gamesListAnswer(QList<game::gameInformations> gamesInfo);
 
 void c_connectionToServerController::writeEndOfPacket()
 {

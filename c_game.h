@@ -3,6 +3,7 @@
 
 #include "_myData.h"
 #include "c_player.h"
+#include "c_lobby.h"
 
 #include <QObject>
 #include <QList>
@@ -10,6 +11,7 @@
 #include <QSet>
 #include <QTimer>
 #include <QPair>
+#include <QPointer>
 
 class c_game : public QObject
 {
@@ -18,39 +20,27 @@ public:
     explicit c_game(QObject *parent = nullptr);
     ~c_game();
 
-    const c_player &getPlayer1() const;
-    const c_player &getPlayer2() const;
-
-//    c_eventController *getEventCtrlr() const;
-
 public slots:
-//    void changeMoveDirection(QList<int> keys);
+    void orderNewLobbyFromServer();
+    void createLobby();
+    void removeLobby();
+    void refreshLobby(const lobby::lobbyInformations &lobbyInfo);
+
+    void getLobbiesListFromServer();
 
 private:
-    game::Players players;
-//    c_player player1;
-//    c_player player2;
-
-//    quint8 speedLevel;
-
-//    c_eventController * eventCtrlr;
-
-//    game::ColisionResult testCollision(QList<QPoint> &snake, const board::boardArray & board);
-
-//    void stopGame(QObject * loserPlayer);
+    QPointer<c_lobby> lobby;
+    c_player player;
 
 private slots:
-//    void addNewBlock(QPair<bool, bool> player);
-//    void addNewFood(QPair<bool, bool> player);
-//    void addNewCoin(QPair<bool, bool> player);
-//    void movePlayer(QPair<bool, bool> player);
-//    void speedUpPlayer(QPair<bool, bool> player);
-//    void testPotentialCollision(QList<QPoint> & snake, const board::boardArray & board);
+    void lobbyChanged(const lobby::lobbyInformations &lobbyInfo);
 
 signals:
-//    void speedUpSignal(QPair<bool, bool> player, quint8 speedLevel);
-    void notificationMessage(QPair<bool, bool> player, QString msg);
-//    void stopGameSignal();
+    void orderNewLobbySignal(const QByteArray &packet);
+    void lobbyCreated(const lobby::lobbyInformations &lobbyInfo);
+    void lobbyRemoved();
+    void lobbyChangedSignal(const lobby::lobbyInformations &lobbyInfo);
+    void getLobbiesListSignal(const QByteArray &packet);
 
 };
 
